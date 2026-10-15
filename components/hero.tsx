@@ -22,7 +22,7 @@ export default function Hero() {
       </div>
 
       {/* Image: full background on mobile, right column on desktop */}
-      <div className="absolute inset-0 md:relative md:inset-auto md:h-[calc(100vh-80px)] md:flex-1 md:p">
+      <div className="absolute inset-0 md:relative md:inset-auto md:h-[calc(100vh-80px)] md:flex-1 ">
         <Image
           src="/hero.png"
           alt="Create a fashion vibe model"
