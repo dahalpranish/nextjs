@@ -1,8 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { sql } from "@/lib/db";
 
-export const dynamic = "force-dynamic"; // always fresh, never statically cached
-
 export async function GET(req: NextRequest) {
   try {
     const search = req.nextUrl.searchParams.get("search") ?? "";
