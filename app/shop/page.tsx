@@ -60,7 +60,7 @@ export default function Shop() {
         <p className="px-9 pt-4 text-black">No products found.</p>
       )}
 
-      <div className="grid w-full grid-cols-[repeat(auto-fit,minmax(250px,1fr))] gap-3 p-9">
+      <div className="grid w-full grid-cols-[repeat(auto-fill,minmax(250px,1fr))] gap-3 p-9">
         {products.map((p) => (
           <Card
             key={p.id}
