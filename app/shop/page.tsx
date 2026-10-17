@@ -1,5 +1,6 @@
 "use client";
 import { useEffect, useState } from "react";
+import Image from "next/image";
 import Nav from "../../components/nav";
 import Card, { Product } from "../../components/product_card";
 
@@ -10,6 +11,8 @@ export default function Shop() {
   const [query, setQuery] = useState("");
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  // which product's popup is open (null = no popup)
+  const [selected, setSelected] = useState<Product | null>(null);
 
   // runs on mount and whenever `query` changes (debounced 300ms)
   useEffect(() => {
@@ -41,6 +44,19 @@ export default function Shop() {
     };
   }, [query]);
 
+  // close popup with Escape key (listener only exists while popup is open)
+  useEffect(() => {
+    if (!selected) return;
+
+    const onKeyDown = (e: KeyboardEvent) => {
+      if (e.key === "Escape") setSelected(null);
+    };
+    window.addEventListener("keydown", onKeyDown);
+
+    // cleanup: remove listener when popup closes
+    return () => window.removeEventListener("keydown", onKeyDown);
+  }, [selected]);
+
   return (
     <div className="flex min-h-screen w-full flex-col bg-[url('/background.jpg')] bg-cover bg-center bg-no-repeat">
       <Nav />
@@ -67,9 +83,43 @@ export default function Shop() {
             name={p.name}
             price={p.price}
             image_url={p.image_url}
+            onClick={() => setSelected(p)}
           />
         ))}
       </div>
+
+      {/* product popup */}
+      {selected && (
+        <div
+          onClick={() => setSelected(null)}
+          className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-5"
+        >
+          <div
+            onClick={(e) => e.stopPropagation()}
+            className="relative w-full max-w-md rounded-xl bg-white p-6 text-black shadow-xl"
+          >
+            <button
+              onClick={() => setSelected(null)}
+              aria-label="Close"
+              className="absolute right-4 top-3 text-2xl font-bold"
+            >
+              ✕
+            </button>
+
+            <Image
+              src={selected.image_url}
+              alt={selected.name}
+              width={400}
+              height={350}
+              className="h-64 w-full object-contain"
+            />
+            <h2 className="mt-4 text-xl font-bold">{selected.name}</h2>
+            <p className="mt-1 text-lg text-neutral-600">
+              ${selected.price.toFixed(2)}
+            </p>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
